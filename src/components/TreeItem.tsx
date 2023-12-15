@@ -1,12 +1,7 @@
-import React, { useState } from "react";
-import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
-import FolderIcon from '@heroicons/react/24/outline/FolderIcon';
-
-interface TreeItemProps {
-  label: string;
-  children?: React.ReactNode;
-}
-
+import { useState } from 'react'
+import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon'
+import FolderIcon from '@heroicons/react/24/outline/FolderIcon'
+import { TreeItemProps } from '@/types/index'
 
 export const TreeItem = ({ label, children }: TreeItemProps) => {
     const [isOpen, setIsOpen] = useState(false);
