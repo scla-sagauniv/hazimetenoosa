@@ -1,4 +1,4 @@
 export interface TreeItemProps {
     label: string;
-    children?: React.ReactNode;
+    children?: TreeItemProps[];
   }

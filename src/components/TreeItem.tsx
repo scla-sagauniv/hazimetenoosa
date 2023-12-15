@@ -17,7 +17,7 @@ export const TreeItem = ({ label, children }: TreeItemProps) => {
           <FolderIcon className="w-5 h-5" />
           <span className="ml-1">{label}</span>
         </div>
-        {isOpen && children}
+        {isOpen && children && children.map((child, index) => <TreeItem key={index} {...child} />)}
       </div>
     );
   };

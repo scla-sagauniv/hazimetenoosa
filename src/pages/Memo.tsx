@@ -1,27 +1,29 @@
-import { TreeItem } from "@/components/TreeItem";
+import { TreeItem } from '@/components/TreeItem'
+import { TreeItemProps } from '@/types/index'
+
+const items : TreeItemProps[] = [
+  { label: "Unread" },
+  { label: "Threads", children: [
+    { label: "General" },
+    { label: "Random" },
+    { label: "Open Source Projects" },
+  ]},
+  { label: "Direct Messages", children: [
+    { label: "Alice" },
+    { label: "Alice2" },
+    { label: "Bob2" },
+    { label: "Charlie2" },
+    { label: "Bob" },
+  ]},
+]
+
 
 export const Memo = () => {
   return (
     <div className="p-4">
       <div>Auth</div>
       <div className="mt-4">
-        <TreeItem label="Unread" />
-        <TreeItem label="Threads">
-          <div className="pl-6">
-            <TreeItem label="General" />
-            <TreeItem label="Random" />
-            <TreeItem label="Open Source Projects" />
-          </div>
-        </TreeItem>
-        <TreeItem label="Direct Messages">
-          <div className="pl-6">
-            <TreeItem label="Alice" />
-            <TreeItem label="Alice2" />
-            <TreeItem label="Bob2" />
-            <TreeItem label="Charlie2" />
-            <TreeItem label="Bob" />
-          </div>
-        </TreeItem>
+        {items.map((item, index) => <TreeItem key={index} {...item} />)}
       </div>
     </div>
   );
