@@ -24,30 +24,33 @@ export const Auth = () => {
         <TabsTrigger value="signin">Sign in</TabsTrigger>
         <TabsTrigger value="signup">Sign up</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">
+      <TabsContent value="signin">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>
-              Make changes to your account here. Click save when you're done.
-            </CardDescription>
+            <CardTitle className="flex justify-center">Sign in</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="Pedro Duarte" />
+              <Label htmlFor="email">E-mail</Label>
+              <CardDescription>
+                Please enter your e-mail address
+              </CardDescription>
+              <Input type="email" placeholder="Email address" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" defaultValue="@peduarte" />
+              <Label htmlFor="password">Password</Label>
+              <CardDescription>
+                Please enter your password
+              </CardDescription>
+              <Input id="password" placeholder="Your password" />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
+          <CardFooter className="flex justify-center">
+            <Button>Sign in</Button>
           </CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="password">
+      <TabsContent value="signup">
         <Card>
           <CardHeader>
             <CardTitle>Password</CardTitle>
