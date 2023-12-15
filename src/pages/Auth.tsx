@@ -35,7 +35,7 @@ export const Auth = () => {
               <CardDescription>
                 Please enter your e-mail address
               </CardDescription>
-              <Input type="email" placeholder="Email address" />
+              <Input type="email" id="email" placeholder="Email address" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
@@ -53,23 +53,30 @@ export const Auth = () => {
       <TabsContent value="signup">
         <Card>
           <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, you'll be logged out.
-            </CardDescription>
+            <CardTitle className="flex justify-center">Sign up</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-3">
             <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
+              <Label htmlFor="signup-email">E-mail</Label>
+              <CardDescription>
+                Please register your email address
+              </CardDescription>
+              <Input type="email" id="signup-email" placeholder="Email address" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
+              <Label htmlFor="signup-password">Password</Label>
+              <CardDescription>
+                Please register your password
+              </CardDescription>
+              <Input id="signup-password" type="password" placeholder="Enter password" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input id="confirm-password" type="password" placeholder="Confirm password" />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
+          <CardFooter className="flex justify-center">
+            <Button>Sign up</Button>
           </CardFooter>
         </Card>
       </TabsContent>
