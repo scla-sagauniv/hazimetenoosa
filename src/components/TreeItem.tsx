@@ -5,7 +5,7 @@ import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Node } from '@/types/index';
 
-export const TreeItem = ({ label, isFolder, children, level = 0 }: Node) => {
+export const TreeItem = ({ id, label, isSecret, isFolder, children, level = 0 }: Node) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
@@ -17,6 +17,10 @@ export const TreeItem = ({ label, isFolder, children, level = 0 }: Node) => {
   const indent = level * 20;
 
   const Icon = isFolder ? FolderIcon : DocumentIcon;
+
+  if (isSecret) {
+    return null;
+  }
 
   return (
     <div style={{ paddingLeft: `${indent}px` }}>
