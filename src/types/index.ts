@@ -1,5 +1,6 @@
-export interface TreeItemProps {
+export interface Node {
     label: string;
-    children?: TreeItemProps[];
+    isFolder: boolean;
+    children?: Node[];
     level?: number;
   }

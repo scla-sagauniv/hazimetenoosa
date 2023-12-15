@@ -1,25 +1,24 @@
 import { TreeItem } from '@/components/TreeItem'
-import { TreeItemProps } from '@/types/index'
+import { Node } from '@/types/index'
 
-const items : TreeItemProps[] = [
-  { label: "Unread" },
-  { label: "Threads", children: [
-    { label: "General", children: [
-      { label: "shin" },
-      { label: "shin2" },
+const items: Node[] = [
+  { label: "Unread", isFolder: false },
+  { label: "Threads", isFolder: true, children: [
+    { label: "General", isFolder: true, children: [
+      { label: "shin", isFolder: false },
+      { label: "shin2", isFolder: false },
     ] },
-    { label: "Random" },
-    { label: "Open Source Projects" },
+    { label: "Random", isFolder: false },
+    { label: "Open Source Projects", isFolder: false },
   ]},
-  { label: "Direct Messages", children: [
-    { label: "Alice" },
-    { label: "Alice2" },
-    { label: "Bob2" },
-    { label: "Charlie2" },
-    { label: "Bob" },
+  { label: "Direct Messages", isFolder: true, children: [
+    { label: "Alice", isFolder: false },
+    { label: "Alice2", isFolder: false },
+    { label: "Bob2", isFolder: false },
+    { label: "Charlie2", isFolder: false },
+    { label: "Bob", isFolder: false },
   ]},
-]
-
+];
 
 export const Memo = () => {
   return (
@@ -29,5 +28,5 @@ export const Memo = () => {
         {items.map((item, index) => <TreeItem key={index} {...item} level={0} />)}
       </div>
     </div>
-  );
-};
+  )
+}
