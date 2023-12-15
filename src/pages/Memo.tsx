@@ -4,7 +4,10 @@ import { TreeItemProps } from '@/types/index'
 const items : TreeItemProps[] = [
   { label: "Unread" },
   { label: "Threads", children: [
-    { label: "General" },
+    { label: "General", children: [
+      { label: "shin" },
+      { label: "shin2" },
+    ] },
     { label: "Random" },
     { label: "Open Source Projects" },
   ]},
@@ -23,7 +26,7 @@ export const Memo = () => {
     <div className="p-4">
       <div>Auth</div>
       <div className="mt-4">
-        {items.map((item, index) => <TreeItem key={index} {...item} />)}
+        {items.map((item, index) => <TreeItem key={index} {...item} level={0} />)}
       </div>
     </div>
   );
