@@ -1,6 +1,8 @@
 export interface Node {
-    label: string;
-    isFolder: boolean;
-    children?: Node[];
-    level?: number;
+    id: string
+    parentId: string | null
+    label: string
+    isFolder: boolean
+    children?: Node[]
+    level?: number
   }
