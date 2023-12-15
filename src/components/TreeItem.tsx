@@ -5,7 +5,7 @@ import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Node } from '@/types/index';
 
-export const TreeItem = ({ id, parentId, label, isFolder, children, level = 0 }: Node) => {
+export const TreeItem = ({ label, isFolder, children, level = 0 }: Node) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
