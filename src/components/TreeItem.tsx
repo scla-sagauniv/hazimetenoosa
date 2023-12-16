@@ -38,12 +38,18 @@ export const TreeItem = ({
     return null;
   }
 
+  const handleOpen = () => {
+    if(changeToOpen){
+      changeToOpen(id);
+    }
+  }
+
   return (
     <div style={{ paddingLeft: `${indent}px` }}>
       <div className="flex items-center">
         <Checkbox className="mr-2" />
         {isFolder && (
-          <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  />
+          <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  onClick={handleOpen}/>
         )}
         {!isFolder && <Icon className="w-5 h-5 mr-2" />}
         <span className="ml-1">{label}</span>

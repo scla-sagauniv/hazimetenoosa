@@ -84,6 +84,7 @@ export const Memo = () => {
     );
   }
 
+
   const changeToEditing = (id: string) => {
     setItems(items => items.map(item => mappingForEditing(item, id)));
   };
