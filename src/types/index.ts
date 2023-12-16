@@ -9,3 +9,14 @@ export interface Node {
     isEditing: boolean
     isOpen: boolean
   }
+
+export type SigninInputs = {
+    email: string;
+    password: string;
+  }
+  
+export type SignupInputs = {
+    email: string;
+    password: string;
+    repassword: string;
+  }

@@ -19,41 +19,68 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-
-type Inputs = {
-  email: string;
-  password: string;
-}
+import { SigninInputs } from "@/types/index";
+import { SignupInputs } from "@/types/index";
 
 export const Auth = () => {
   const navigate = useNavigate();
-  const [errorMsg, setErrorMsg] = useState("")
+  const [signinErrorMsg, setSigninErrorMsg] = useState("")
+  const [signupErrorMsg, setSignupErrorMsg] = useState("")
+  const [isError, setIsError] = useState(false);
   
   const {
-      register,
-      handleSubmit,
-      reset,
-      formState: { errors }
-  } = useForm<Inputs>({
-      mode: 'onChange',
-  });
+    register: signinRegister,
+    handleSubmit: signinHandleSubmit,
+    reset: signinReset,
+    formState: { errors: signinErrors }
+} = useForm<SigninInputs>({
+    mode: 'onChange',
+});
 
-  const onSubmit: SubmitHandler<Inputs> = (data) =>{
+const {
+    register: signupRegister,
+    handleSubmit: signupHandleSubmit,
+    reset: signupReset,
+    formState: { errors: signupErrors }
+} = useForm<SignupInputs>({
+    mode: 'onChange',
+});
+
+  const onSubmitSignin: SubmitHandler<SigninInputs> = (data) =>{
     if (data.email === "email@gmail.com" && data.password === "password"){  //仮ID・パスワード
-        loginSuccess();
+        inSuccess();
     }else{
-        loginErrorMsg();
+        inErrorMsg();
+        setIsError(true);
     }
-    reset();
+    signinReset();
   };
 
-  const loginSuccess = () => {
-    setErrorMsg("");
+  const onSubmitSignup: SubmitHandler<SignupInputs> = (data) =>{
+    if (data.email === "email@gmail.com" && data.password === "password" && data.repassword === data.password){  //仮ID・パスワード
+        upSuccess();
+    }else{
+        upErrorMsg();
+    }
+    signupReset();
+  };
+
+  const inSuccess = () => {
+    setSigninErrorMsg("");
     navigate("/memo");
   }
 
-  const loginErrorMsg = () => {
-    setErrorMsg("ユーザーIDかパスワードが間違っています。");
+  const inErrorMsg = () => {
+    setSigninErrorMsg("ユーザーIDかパスワードが間違っています。");
+  }
+
+  const upSuccess = () => {
+    setSigninErrorMsg("");
+    navigate("/memo");
+  }
+
+  const upErrorMsg = () => {
+    setSignupErrorMsg("ユーザーIDかパスワードが間違っています。");
   }
 
   return (
@@ -65,12 +92,12 @@ export const Auth = () => {
       </TabsList>
       <TabsContent value="signin">
         <Card>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={signinHandleSubmit(onSubmitSignin)}>
             <CardHeader>
               <CardTitle className="flex justify-center">Sign in</CardTitle>
             </CardHeader>
-            <CardDescription className="errorMsg">
-              {errorMsg}
+            <CardDescription className={`errorMsg ${isError ? 'text-red-500' : 'text-black-500'}`}>
+              {signinErrorMsg}
             </CardDescription>
             <CardContent className="space-y-2">
                 <div className="space-y-1">
@@ -78,9 +105,9 @@ export const Auth = () => {
                   <CardDescription>
                     Please enter your e-mail address
                   </CardDescription>
-                  <Input type="email" id="email" placeholder="Email address" {...register('email')} />
+                  <Input type="email" id="email" placeholder="Email address" {...signinRegister('email')} style={{ borderColor: isError ? 'red' : 'black' }}/>
                   <ErrorMessage
-                    errors={errors}
+                    errors={signinErrors}
                     name="email"
                     render={({ message }) => <p className="text-red-500">{message}</p>}
                   />
@@ -90,9 +117,9 @@ export const Auth = () => {
                   <CardDescription>
                     Please enter your password
                   </CardDescription>
-                  <Input id="password" placeholder="Your password" {...register('password')} />
+                  <Input type="password" id="password" placeholder="Your password" {...signinRegister('password')} style={{ borderColor: isError ? 'red' : 'black' }} />
                   <ErrorMessage
-                      errors={errors}
+                      errors={signinErrors}
                       name="password"
                       render={({ message }) => <p className="text-red-500">{message}</p>}
                   />
@@ -106,32 +133,52 @@ export const Auth = () => {
       </TabsContent>
       <TabsContent value="signup">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-center">Sign up</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="space-y-1">
-              <Label htmlFor="signup-email">E-mail</Label>
-              <CardDescription>
-                Please register your email address
-              </CardDescription>
-              <Input type="email" id="signup-email" placeholder="Email address" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="signup-password">Password</Label>
-              <CardDescription>
-                Please register your password
-              </CardDescription>
-              <Input id="signup-password" type="password" placeholder="Enter password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input id="confirm-password" type="password" placeholder="Confirm password" />
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <Button>Sign up</Button>
-          </CardFooter>
+          <form onSubmit={signupHandleSubmit(onSubmitSignup)}>
+            <CardHeader>
+              <CardTitle className="flex justify-center">Sign up</CardTitle>
+            </CardHeader>
+            <CardDescription className={`errorMsg ${isError ? 'text-red-500' : 'text-black-500'}`}>
+              {signupErrorMsg}
+            </CardDescription>
+            <CardContent className="space-y-3">
+              <div className="space-y-1">
+                <Label htmlFor="signup-email">E-mail</Label>
+                <CardDescription>
+                  Please register your email address
+                </CardDescription>
+                <Input type="email" id="signup-email" placeholder="Email address" {...signupRegister('email')} style={{ borderColor: isError ? 'red' : 'black' }} />
+                <ErrorMessage
+                    errors={signupErrors}
+                    name="email"
+                    render={({ message }) => <p className="text-red-500">{message}</p>}
+                  />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="signup-password">Password</Label>
+                <CardDescription>
+                  Please register your password
+                </CardDescription>
+                <Input id="signup-password" type="password" placeholder="Enter password" {...signupRegister('password')} style={{ borderColor: isError ? 'red' : 'black' }} />
+                <ErrorMessage
+                    errors={signupErrors}
+                    name="password"
+                    render={({ message }) => <p className="text-red-500">{message}</p>}
+                  />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input id="confirm-password" type="password" placeholder="Confirm password" {...signupRegister('repassword')} style={{ borderColor: isError ? 'red' : 'black' }} />
+                <ErrorMessage
+                    errors={signupErrors}
+                    name="repassword"
+                    render={({ message }) => <p className="text-red-500">{message}</p>}
+                  />
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button>Sign up</Button>
+            </CardFooter>
+          </form>
         </Card>
       </TabsContent>
     </Tabs>

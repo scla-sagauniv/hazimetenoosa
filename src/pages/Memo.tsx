@@ -1,8 +1,11 @@
-import { useState } from "react";
-import { TreeItem } from "@/components/TreeItem";
-import { Node } from "@/types/index";
+import { useState } from 'react'
+import { TreeItem } from '@/components/TreeItem'
+import { Content } from '@/components/Content';
+import { Node } from '@/types/index'
+import { useStore } from '@/states/state';
 
 export const Memo = () => {
+  const selected = useStore((state) => state.selected)
   const [items, setItems] = useState<Node[]>([
     {
       id: "1",
@@ -151,8 +154,8 @@ export const Memo = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="mt-4">
+    <div className={`flex ${selected ? 'bg-black' : ''}`}>
+      <div className={`flex-1 ml-4 mt-4 overflow-auto ${selected ? 'text-white' : ''}`}>
         {items.map((item) => (
           <TreeItem
             key={item.id}
@@ -164,6 +167,7 @@ export const Memo = () => {
           />
         ))}
       </div>
+      <div className='mr-4 w-[80%]'><Content/></div>
     </div>
   );
 };
