@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Node } from '@/types/index';
 import { FaFolderPlus } from 'react-icons/fa';
 import { FaFileMedical } from "react-icons/fa";
+import { useStore } from '@/states/state';
 
 export const TreeItem = ({
   id,
@@ -47,6 +48,7 @@ export const TreeItem = ({
     }
   }
 
+  const selected = useStore((state) => state.selected)
   const indent = level * 20;
   const Icon = isFolder ? FolderIcon : DocumentIcon;
 
@@ -63,21 +65,23 @@ export const TreeItem = ({
   return (
     <div style={{ paddingLeft: `${indent}px` }}>
       <div className="flex items-center">
-        <Checkbox className="mr-2" />
+        <Checkbox className={`mr-2 ${selected ? 'bg-white' : ''}`} />
         {isFolder && (
           <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  onClick={handleOpen}/>
         )}
         {!isFolder && <Icon className="w-5 h-5 mr-2" />}
         <span className="ml-1">{label}</span>
-        {isFolder && <FaFolderPlus className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFolder}/>}
+
+        {isFolder && <FaFolderPlus className='w-[26px] h-4 ml-2 cursor-pointer' onClick={handleAddFolder}/>}
         {isFolder && <FaFileMedical className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFile}/>}
+
         
       </div>
       {isOpen && isAdding && isFolder && (
         <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
           <input 
             type='text' 
-            className='w-1/2'
+            className={`w-20 border border-black ${selected ? 'text-black' : ''}`}
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => {
