@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TreeItem } from '@/components/TreeItem'
-import { Content } from '@/components/Content';
+// import { Content } from '@/components/Content';
 import { Node } from '@/types/index'
 import { useStore } from '@/states/state';
 
@@ -85,16 +85,14 @@ export const Memo = () => {
   }
 
   const changeToEditing = (id: string) => {
-    setItems(items => {
-      return items.map(item => mappingForEditing(item, id));
-    });
+    setItems(items => items.map(item => mappingForEditing(item, id)));
   };
   
   const mappingForEditing = (item: Node, targetId: string): Node => {
     if (item.id === targetId) {
       return {
         ...item,
-        isEditing: true
+        isEditing: !item.isEditing
       };
     } else if (item.children) {
       const newChildren = item.children.map(child => mappingForEditing(child, targetId));
@@ -167,7 +165,7 @@ export const Memo = () => {
           />
         ))}
       </div>
-      <div className='mr-4 w-[80%]'><Content/></div>
+      {/* <div className='mr-4 w-[80%]'><Content/></div> */}
     </div>
   );
 };

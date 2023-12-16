@@ -19,7 +19,9 @@ export const TreeItem = ({
   changeToEditing,
   changeToOpen
 }: Node & { addNewFolder?: (parentId: string, folderName: string) => void} & {changeToEditing?: (id: string) => void} & {changeToOpen?: (id: string) => void}) => {
+
   const [newFolderName, setNewFolderName] = useState<string>("")
+
   const handleAddFolder = () => {
     if(changeToEditing){
       changeToEditing(id);
