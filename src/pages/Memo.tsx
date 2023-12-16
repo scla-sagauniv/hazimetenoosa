@@ -71,13 +71,13 @@ export const Memo = () => {
   };
 
   return (
-    <div className='p-4 flex'>
-      <div className='flex-1 mt-4 overflow-auto'>
+    <div className='flex'>
+      <div className='flex-1 ml-4 mt-4 overflow-auto'>
         {items.map((item) => (
           <TreeItem key={item.id} {...item} level={0} addNewFolder={addNewFolder} />
         ))}
       </div>
-      <div className='p-4 w-[80%]'><Content/></div>
+      <div className='mr-4 w-[80%]'><Content/></div>
     </div>
   );
 };
