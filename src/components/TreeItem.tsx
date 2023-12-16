@@ -18,11 +18,8 @@ export const TreeItem = ({
   addNewFolder, // ここで関数を受け取る,
   changeToEditing,
   changeToOpen
-}: Node & { addNewFolder?: (parentId: string) => void} & {changeToEditing?: (id: string) => void} & {changeToOpen?: (id: string) => void}) => {
-  // const [isOpen, setIsOpen] = useState(false);
-
-
-
+}: Node & { addNewFolder?: (parentId: string, folderName: string) => void} & {changeToEditing?: (id: string) => void} & {changeToOpen?: (id: string) => void}) => {
+  const [newFolderName, setNewFolderName] = useState<string>("")
   const handleAddFolder = () => {
     if(changeToEditing){
       changeToEditing(id);
@@ -30,9 +27,6 @@ export const TreeItem = ({
     if(changeToOpen){
       changeToOpen(id);
     }
-    // // if (addNewFolder) {
-    //   addNewFolder(id);
-    // }
   };
 
   const indent = level * 20;
@@ -56,15 +50,20 @@ export const TreeItem = ({
       </div>
       {isOpen && isEditing && (
         <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
-          <input type='text' className='w-1/2' onKeyDown={(e) => {
-            // enter をおしたらstate にあたらしいfolderを追加する
-            if(e.key === 'Enter'){
-              // ここで関数を呼び出す
+          <input 
+            type='text' 
+            className='w-1/2'
+            value={newFolderName}
+            onChange={(e) => setNewFolderName(e.target.value)}
+            onKeyDown={(e) => {
+            if(e.key === 'Enter' && newFolderName){
               if(addNewFolder){
-                addNewFolder(id);
-                // そのあと、isEditing をfalseにする
-                // isOpen はそのまま
+                addNewFolder(id, newFolderName);
               }
+              if(changeToEditing){
+                changeToEditing(id);
+              }
+              setNewFolderName("");
             }
           }}/>
         </div>

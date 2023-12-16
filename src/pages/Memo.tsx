@@ -63,18 +63,13 @@ export const Memo = () => {
         isOpen: true,
       };
     } else if (item.children) {
-      // 新しい子ノードの配列を作成します。
       const newChildren = item.children.map((child) => mapping(child, targetId));
-  
-      // 新しい子ノードの配列を持つ新しいノードを返します。
-      return {
+        return {
         ...item,
         children: newChildren,
       };
     }
-  
-    // 一致するノードが見つからない場合は元のノードをそのまま返します。
-    return item;
+      return item;
   }
 
   const changeToOpen = (id: string) => {
@@ -136,13 +131,13 @@ export const Memo = () => {
     });
   };
 
-  const addNewFolder = (parentId: string) => {
+  const addNewFolder = (parentId: string, folderName: string) => {
     const parentNode = findParentNode(parentId, items);
     const newLevel = parentNode?.level != null ? parentNode.level + 1 : 0;
     const newFolder: Node = {
       id: Date.now().toString(),
       parentId: parentId,
-      label: "PlusFolder",
+      label: folderName,
       isFolder: true,
       isSecret: false,
       children: [],
