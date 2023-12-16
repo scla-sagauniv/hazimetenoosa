@@ -55,24 +55,27 @@ export const Memo = () => {
     },
   ]);
 
+
   const mapping = (item: Node, targetId: string): Node => {
-    console.log(item.id, targetId)
     if (item.id === targetId) {
       return {
         ...item,
         isOpen: true,
       };
-    }else{
-      if(!item.children){
-        return item;
-      }else{
-        item.children.map((child) => {
-          return mapping(child, targetId);
-        })
-      }
+    } else if (item.children) {
+      // 新しい子ノードの配列を作成します。
+      const newChildren = item.children.map((child) => mapping(child, targetId));
+  
+      // 新しい子ノードの配列を持つ新しいノードを返します。
+      return {
+        ...item,
+        children: newChildren,
+      };
     }
+  
+    // 一致するノードが見つからない場合は元のノードをそのまま返します。
     return item;
-  } 
+  }
 
   const changeToOpen = (id: string) => {
     setItems( items => {
@@ -84,18 +87,25 @@ export const Memo = () => {
   }
 
   const changeToEditing = (id: string) => {
-    setItems( items => {
-      return items.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            isEditing: true,
-          };
-        }
-        return item;
-      })
+    setItems(items => {
+      return items.map(item => mappingForEditing(item, id));
+    });
+  };
+  
+  const mappingForEditing = (item: Node, targetId: string): Node => {
+    if (item.id === targetId) {
+      return {
+        ...item,
+        isEditing: true
+      };
+    } else if (item.children) {
+      const newChildren = item.children.map(child => mappingForEditing(child, targetId));
+      return {
+        ...item,
+        children: newChildren
+      };
     }
-    );
+    return item;
   };
 
   const findParentNode = (parentId: string, nodes: Node[]): Node | null => {

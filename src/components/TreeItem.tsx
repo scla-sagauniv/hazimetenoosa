@@ -58,8 +58,14 @@ export const TreeItem = ({
         <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
           <input type='text' className='w-1/2' onKeyDown={(e) => {
             // enter をおしたらstate にあたらしいfolderを追加する
-            // そのあと、isEditing をfalseにする
-            // isOpen はそのまま
+            if(e.key === 'Enter'){
+              // ここで関数を呼び出す
+              if(addNewFolder){
+                addNewFolder(id);
+                // そのあと、isEditing をfalseにする
+                // isOpen はそのまま
+              }
+            }
           }}/>
         </div>
       )
