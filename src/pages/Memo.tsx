@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { TreeItem } from '@/components/TreeItem'
 import { Content } from '@/components/Content';
 import { Node } from '@/types/index'
+import { useStore } from '@/states/state';
 
 export const Memo = () => {
+  const selected = useStore((state) => state.selected)
   const [items, setItems] = useState<Node[]>([
     { id: "1", parentId: null, label: "Unread", isFolder: false, isSecret: false },
     { id: "2", parentId: null, label: "Threads", isFolder: true, isSecret: false, children: [
@@ -71,8 +73,8 @@ export const Memo = () => {
   };
 
   return (
-    <div className='flex'>
-      <div className='flex-1 ml-4 mt-4 overflow-auto'>
+    <div className={`flex ${selected ? 'bg-black' : ''}`}>
+      <div className={`flex-1 ml-4 mt-4 overflow-auto ${selected ? 'text-white' : ''}`}>
         {items.map((item) => (
           <TreeItem key={item.id} {...item} level={0} addNewFolder={addNewFolder} />
         ))}

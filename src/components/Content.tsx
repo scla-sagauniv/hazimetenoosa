@@ -13,8 +13,20 @@ import {
 } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useNavigate } from "react-router-dom";
+import { useStore } from "@/states/state";
 
 export const Content = () => {
+    const selected = useStore((state) => state.selected)
+    const setSelected = useStore((state) => state.setSelected);
+
+    const changeTabNormal = () => {
+        setSelected(false);
+    }
+
+    const changeTabSecret = () => {
+        setSelected(true);
+    }
+
     const navigate = useNavigate();
 
     const handleLogoutButton = () => {
@@ -25,11 +37,11 @@ export const Content = () => {
     <div className="flex justify-center items-center h-screen">
         <Tabs defaultValue="normal" className="w-full">
             <div className="flex">
-            <TabsList className="grid w-[60%] grid-cols-2 justify-center">
-                <TabsTrigger value="normal">ノーマル</TabsTrigger>
-                <TabsTrigger value="secret">シークレット</TabsTrigger>
+            <TabsList className="grid w-[60%] grid-cols-2 justify-center bg-black">
+                <TabsTrigger value="normal" onClick={changeTabNormal}>ノーマル</TabsTrigger>
+                <TabsTrigger value="secret" onClick={changeTabSecret}>シークレット</TabsTrigger>
             </TabsList>
-            <Button className="ml-64" onClick={handleLogoutButton}>Log out</Button>
+            <Button className="ml-64" variant={`${selected ? 'outline' : 'default'}`} onClick={handleLogoutButton}>Log out</Button>
             </div>
             <TabsContent value="normal">
                 <Card>
@@ -42,12 +54,12 @@ export const Content = () => {
                 </Card>
             </TabsContent>
             <TabsContent value="secret">
-                <Card>
+                <Card className="bg-black">
                 <CardHeader>
-                    <CardTitle>タイトル</CardTitle>
+                    <CardTitle className="text-white">タイトル</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Textarea placeholder="メモを入力してください．" className="h-96" />
+                    <Textarea placeholder="メモを入力してください．" className="h-96 bg-black text-white" />
                 </CardContent>
                 </Card>
             </TabsContent>
