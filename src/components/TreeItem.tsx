@@ -10,7 +10,7 @@ import { FaFileMedical } from "react-icons/fa";
 export const TreeItem = ({
   id,
   label,
-  isEditing,
+  isAdding,
   isOpen,
   isSecret,
   isFolder,
@@ -18,11 +18,11 @@ export const TreeItem = ({
   level = 0,
   addNewFolder,
   addNewFile,
-  changeToEditing,
+  changeToAdding,
   changeToOpen
 }: Node & { addNewFolder?: 
   (parentId: string, folderName: string) => void} & 
-  {changeToEditing?: (id: string) => void} & 
+  {changeToAdding?: (id: string) => void} & 
   {changeToOpen?: (id: string) => void} & 
   {addNewFile?: (parentId: string, fileName: string) => void}
   ) => {
@@ -32,8 +32,8 @@ export const TreeItem = ({
   const [showFileInput, setShowFileInput] = useState<boolean>(false)
 
   const handleAddFolder = () => {
-    if(changeToEditing){
-      changeToEditing(id);
+    if(changeToAdding){
+      changeToAdding(id);
     }
     if(changeToOpen){
       changeToOpen(id);
@@ -73,7 +73,7 @@ export const TreeItem = ({
         {isFolder && <FaFileMedical className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFile}/>}
         
       </div>
-      {isOpen && isEditing && isFolder && (
+      {isOpen && isAdding && isFolder && (
         <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
           <input 
             type='text' 
@@ -85,8 +85,8 @@ export const TreeItem = ({
               if(addNewFolder){
                 addNewFolder(id, newFolderName);
               }
-              if(changeToEditing){
-                changeToEditing(id);
+              if(changeToAdding){
+                changeToAdding(id);
               }
               setNewFolderName("");
             }
@@ -106,8 +106,8 @@ export const TreeItem = ({
               if(addNewFile){
                 addNewFile(id, newFileName);
               }
-              if(changeToEditing){
-                changeToEditing(id);
+              if(changeToAdding){
+                changeToAdding(id);
               }
               setNewFileName("");
               setShowFileInput(false);
@@ -119,7 +119,7 @@ export const TreeItem = ({
       {isOpen && children && (
         <div style={{ marginLeft: '20px' }}>
           {children.map((child) => (
-            <TreeItem key={child.id} {...child} level={level + 1} addNewFolder={addNewFolder} addNewFile={addNewFile} changeToEditing={changeToEditing} changeToOpen={changeToOpen}/> // 子コンポーネントにも引き継ぐ
+            <TreeItem key={child.id} {...child} level={level + 1} addNewFolder={addNewFolder} addNewFile={addNewFile} changeToAdding={changeToAdding} changeToOpen={changeToOpen}/> // 子コンポーネントにも引き継ぐ
           ))}
         </div>
       )}

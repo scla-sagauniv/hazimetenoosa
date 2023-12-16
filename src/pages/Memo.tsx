@@ -13,7 +13,7 @@ export const Memo = () => {
       label: "Unread",
       isFolder: false,
       isSecret: false,
-      isEditing: false,
+      isAdding: false,
       isOpen: false,
     },
     {
@@ -22,7 +22,7 @@ export const Memo = () => {
       label: "Threads",
       isFolder: true,
       isSecret: false,
-      isEditing: false,
+      isAdding: false,
       isOpen: false,
       children: [
         {
@@ -31,7 +31,7 @@ export const Memo = () => {
           label: "General",
           isFolder: true,
           isSecret: false,
-          isEditing: false,
+          isAdding: false,
           isOpen: false,
           children: [
             {
@@ -40,7 +40,7 @@ export const Memo = () => {
               label: "shin",
               isFolder: false,
               isSecret: true,
-              isEditing: false,
+              isAdding: false,
               isOpen: false,
             },
             {
@@ -49,7 +49,7 @@ export const Memo = () => {
               label: "shin2",
               isFolder: false,
               isSecret: false,
-              isEditing: false,
+              isAdding: false,
               isOpen: false,
             },
           ],
@@ -85,18 +85,18 @@ export const Memo = () => {
   }
 
 
-  const changeToEditing = (id: string) => {
-    setItems(items => items.map(item => mappingForEditing(item, id)));
+  const changeToAdding = (id: string) => {
+    setItems(items => items.map(item => mappingForAdding(item, id)));
   };
   
-  const mappingForEditing = (item: Node, targetId: string): Node => {
+  const mappingForAdding = (item: Node, targetId: string): Node => {
     if (item.id === targetId) {
       return {
         ...item,
-        isEditing: !item.isEditing
+        isAdding: !item.isAdding
       };
     } else if (item.children) {
-      const newChildren = item.children.map(child => mappingForEditing(child, targetId));
+      const newChildren = item.children.map(child => mappingForAdding(child, targetId));
       return {
         ...item,
         children: newChildren
@@ -145,7 +145,7 @@ export const Memo = () => {
       children: [],
       level: newLevel,
       isOpen: false,
-      isEditing: false,
+      isAdding: false,
     };
 
     const updatedItems = addNodeToTree(newFolder, items);
@@ -164,7 +164,7 @@ export const Memo = () => {
       children: [],
       level: newLevel,
       isOpen: false,
-      isEditing: false,
+      isAdding: false,
     };
 
     const updatedItems = addNodeToTree(newFile, items);
@@ -181,7 +181,7 @@ export const Memo = () => {
             level={0}
             addNewFolder={addNewFolder}
             addNewFile={addNewFile}
-            changeToEditing={changeToEditing}
+            changeToAdding={changeToAdding}
             changeToOpen={changeToOpen}
           />
         ))}
