@@ -6,4 +6,6 @@ export interface Node {
     isFolder: boolean
     children?: Node[]
     level?: number
+    isEditing: boolean
+    isOpen: boolean
   }
