@@ -12,12 +12,24 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
 import { useNavigate } from "react-router-dom";
+import { useState } from "react"
 import { useStore } from "@/states/state";
 
 export const Content = () => {
     const selected = useStore((state) => state.selected)
     const setSelected = useStore((state) => state.setSelected);
+    const [hasUSB, setHasUSB] = useState<boolean>(true)
 
     const changeTabNormal = () => {
         setSelected(false);
@@ -39,7 +51,25 @@ export const Content = () => {
             <div className="flex">
             <TabsList className="grid w-[60%] grid-cols-2 justify-center bg-black">
                 <TabsTrigger value="normal" onClick={changeTabNormal}>ノーマル</TabsTrigger>
-                <TabsTrigger value="secret" onClick={changeTabSecret}>シークレット</TabsTrigger>
+                {hasUSB && <TabsTrigger value="secret" onClick={changeTabSecret}>シークレット</TabsTrigger>}
+                {!hasUSB && <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <TabsTrigger value="normal" onClick={changeTabNormal}>シークレット</TabsTrigger>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>認証できませんでした</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            USBで認証してください
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction>
+                                <Button>OK</Button>
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>}
             </TabsList>
             <Button className="ml-64" variant={`${selected ? 'outline' : 'default'}`} onClick={handleLogoutButton}>Log out</Button>
             </div>
