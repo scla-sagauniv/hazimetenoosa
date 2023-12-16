@@ -26,6 +26,7 @@ export const Auth = () => {
   const navigate = useNavigate();
   const [signinErrorMsg, setSigninErrorMsg] = useState("")
   const [signupErrorMsg, setSignupErrorMsg] = useState("")
+  const [isError, setIsError] = useState(false);
   
   const {
     register: signinRegister,
@@ -50,6 +51,7 @@ const {
         inSuccess();
     }else{
         inErrorMsg();
+        setIsError(true);
     }
     signinReset();
   };
@@ -94,7 +96,7 @@ const {
             <CardHeader>
               <CardTitle className="flex justify-center">Sign in</CardTitle>
             </CardHeader>
-            <CardDescription className="errorMsg">
+            <CardDescription className={`errorMsg ${isError ? 'text-red-500' : 'text-black-500'}`}>
               {signinErrorMsg}
             </CardDescription>
             <CardContent className="space-y-2">
@@ -103,7 +105,7 @@ const {
                   <CardDescription>
                     Please enter your e-mail address
                   </CardDescription>
-                  <Input type="email" id="email" placeholder="Email address" {...signinRegister('email')} />
+                  <Input type="email" id="email" placeholder="Email address" {...signinRegister('email')} style={{ borderColor: isError ? 'red' : 'black' }}/>
                   <ErrorMessage
                     errors={signinErrors}
                     name="email"
@@ -115,7 +117,7 @@ const {
                   <CardDescription>
                     Please enter your password
                   </CardDescription>
-                  <Input type="password" id="password" placeholder="Your password" {...signinRegister('password')} />
+                  <Input type="password" id="password" placeholder="Your password" {...signinRegister('password')} style={{ borderColor: isError ? 'red' : 'black' }} />
                   <ErrorMessage
                       errors={signinErrors}
                       name="password"
@@ -135,7 +137,7 @@ const {
             <CardHeader>
               <CardTitle className="flex justify-center">Sign up</CardTitle>
             </CardHeader>
-            <CardDescription className="errorMsg">
+            <CardDescription className={`errorMsg ${isError ? 'text-red-500' : 'text-black-500'}`}>
               {signupErrorMsg}
             </CardDescription>
             <CardContent className="space-y-3">
@@ -144,7 +146,7 @@ const {
                 <CardDescription>
                   Please register your email address
                 </CardDescription>
-                <Input type="email" id="signup-email" placeholder="Email address" {...signupRegister('email')} />
+                <Input type="email" id="signup-email" placeholder="Email address" {...signupRegister('email')} style={{ borderColor: isError ? 'red' : 'black' }} />
                 <ErrorMessage
                     errors={signupErrors}
                     name="email"
@@ -156,7 +158,7 @@ const {
                 <CardDescription>
                   Please register your password
                 </CardDescription>
-                <Input id="signup-password" type="password" placeholder="Enter password" {...signupRegister('password')} />
+                <Input id="signup-password" type="password" placeholder="Enter password" {...signupRegister('password')} style={{ borderColor: isError ? 'red' : 'black' }} />
                 <ErrorMessage
                     errors={signupErrors}
                     name="password"
@@ -165,7 +167,7 @@ const {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input id="confirm-password" type="password" placeholder="Confirm password" {...signupRegister('repassword')} />
+                <Input id="confirm-password" type="password" placeholder="Confirm password" {...signupRegister('repassword')} style={{ borderColor: isError ? 'red' : 'black' }} />
                 <ErrorMessage
                     errors={signupErrors}
                     name="repassword"
