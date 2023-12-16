@@ -9,23 +9,23 @@ import { FaFolderPlus } from 'react-icons/fa';
 export const TreeItem = ({
   id,
   label,
+  isEditing,
+  isOpen,
   isSecret,
   isFolder,
   children,
   level = 0,
-  addNewFolder // ここで関数を受け取る
-}: Node & { addNewFolder?: (parentId: string) => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    if (isFolder) {
-      setIsOpen(!isOpen);
-    }
-  };
-
+  addNewFolder, // ここで関数を受け取る,
+  changeToEditing,
+  changeToOpen
+}: Node & { addNewFolder?: (parentId: string, folderName: string) => void} & {changeToEditing?: (id: string) => void} & {changeToOpen?: (id: string) => void}) => {
+  const [newFolderName, setNewFolderName] = useState<string>("")
   const handleAddFolder = () => {
-    if (addNewFolder) {
-      addNewFolder(id);
+    if(changeToEditing){
+      changeToEditing(id);
+    }
+    if(changeToOpen){
+      changeToOpen(id);
     }
   };
 
@@ -41,19 +41,42 @@ export const TreeItem = ({
       <div className="flex items-center">
         <Checkbox className="mr-2" />
         {isFolder && (
-          <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`} onClick={toggle} />
+          <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  />
         )}
         {!isFolder && <Icon className="w-5 h-5 mr-2" />}
         <span className="ml-1">{label}</span>
         {isFolder && <FaFolderPlus className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFolder}/>}
+        
       </div>
+      {isOpen && isEditing && (
+        <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
+          <input 
+            type='text' 
+            className='w-1/2'
+            value={newFolderName}
+            onChange={(e) => setNewFolderName(e.target.value)}
+            onKeyDown={(e) => {
+            if(e.key === 'Enter' && newFolderName){
+              if(addNewFolder){
+                addNewFolder(id, newFolderName);
+              }
+              if(changeToEditing){
+                changeToEditing(id);
+              }
+              setNewFolderName("");
+            }
+          }}/>
+        </div>
+      )
+      }
       {isOpen && children && (
         <div style={{ marginLeft: '20px' }}>
           {children.map((child) => (
-            <TreeItem key={child.id} {...child} level={level + 1} addNewFolder={addNewFolder} /> // 子コンポーネントにも引き継ぐ
+            <TreeItem key={child.id} {...child} level={level + 1} addNewFolder={addNewFolder} changeToEditing={changeToEditing} changeToOpen={changeToOpen}/> // 子コンポーネントにも引き継ぐ
           ))}
         </div>
       )}
     </div>
   );
 };
+
