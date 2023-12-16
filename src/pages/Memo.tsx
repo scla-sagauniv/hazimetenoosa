@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TreeItem } from '@/components/TreeItem'
-// import { Content } from '@/components/Content';
+import { Content } from '@/components/Content';
 import { Node } from '@/types/index'
 import { useStore } from '@/states/state';
 
@@ -152,6 +152,25 @@ export const Memo = () => {
     setItems(updatedItems);
   };
 
+  const addNewFile = (parentId: string, fileName: string) => {
+    const parentNode = findParentNode(parentId, items);
+    const newLevel = parentNode?.level != null ? parentNode.level + 1 : 0;
+    const newFile: Node = {
+      id: Date.now().toString(),
+      parentId: parentId,
+      label: fileName,
+      isFolder: false,
+      isSecret: false,
+      children: [],
+      level: newLevel,
+      isOpen: false,
+      isEditing: false,
+    };
+
+    const updatedItems = addNodeToTree(newFile, items);
+    setItems(updatedItems);
+  };
+
   return (
     <div className={`flex ${selected ? 'bg-black' : ''}`}>
       <div className={`flex-1 ml-4 mt-4 overflow-auto ${selected ? 'text-white' : ''}`}>
@@ -161,12 +180,13 @@ export const Memo = () => {
             {...item}
             level={0}
             addNewFolder={addNewFolder}
+            addNewFile={addNewFile}
             changeToEditing={changeToEditing}
             changeToOpen={changeToOpen}
           />
         ))}
       </div>
-      {/* <div className='mr-4 w-[80%]'><Content/></div> */}
+      <div className='mr-4 w-[80%]'><Content/></div>
     </div>
   );
 };
