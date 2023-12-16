@@ -102,7 +102,7 @@ export const TreeItem = ({
         <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
           <input 
             type='text' 
-            className='w-1/2'
+            className={`w-20 border border-black ${selected ? 'text-black' : ''}`}
             value={newFileName}
             onChange={(e) => setNewFileName(e.target.value)}
             onKeyDown={(e) => {
