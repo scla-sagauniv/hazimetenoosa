@@ -63,7 +63,7 @@ export const Memo = () => {
     if (item.id === targetId) {
       return {
         ...item,
-        isOpen: true,
+        isOpen: !item.isOpen,
       };
     } else if (item.children) {
       const newChildren = item.children.map((child) =>
@@ -93,7 +93,7 @@ export const Memo = () => {
     if (item.id === targetId) {
       return {
         ...item,
-        isAdding: !item.isAdding,
+        isAdding: true,
       };
     } else if (item.children) {
       const newChildren = item.children.map((child) =>
@@ -143,7 +143,7 @@ export const Memo = () => {
       parentId: parentId,
       label: folderName,
       isFolder: true,
-      isSecret: false,
+      isSecret: selected,
       children: [],
       level: newLevel,
       isOpen: false,

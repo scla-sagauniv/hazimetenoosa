@@ -113,7 +113,7 @@ export const TreeItem = ({
           />
         </div>
       )}
-      {showFileInput && (
+      {showFileInput && isOpen && (
         <div style={{ marginLeft: "20px", paddingLeft: `${indent + 20}px` }}>
           <input
             type="text"
