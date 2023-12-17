@@ -64,16 +64,16 @@ export const TreeItem = ({
 
   return (
     <div style={{ paddingLeft: `${indent}px` }}>
-      <div className="flex items-center">
+      <div className="flex items-cente overflow-hidden">
         <Checkbox className={`mr-2 ${selected ? 'bg-white' : ''}`} />
         {isFolder && (
           <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  onClick={handleOpen}/>
         )}
         {!isFolder && <Icon className="w-5 h-5 mr-2" />}
-        <span className="ml-1">{label}</span>
+        <div className="ml-1">{label}</div>
 
-        {isFolder && <FaFolderPlus className='w-[26px] h-4 ml-2 cursor-pointer' onClick={handleAddFolder}/>}
-        {isFolder && <FaFileMedical className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFile}/>}
+        {isFolder && <FaFolderPlus className='w-[20px] h-[20px] ml-2 cursor-pointer' onClick={handleAddFolder}/>}
+        {isFolder && <FaFileMedical className='w-[20px] h-[20px] ml-2 cursor-pointer' onClick={handleAddFile}/>}
 
         
       </div>
