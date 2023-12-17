@@ -51,7 +51,9 @@ export const TreeItem = ({
   const Icon = isFolder ? FolderIcon : DocumentIcon;
 
   if (isSecret) {
-    return null;
+    if (!selected) {
+      return null;
+    }
   }
 
   const handleOpen = () => {

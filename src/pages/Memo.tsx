@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { TreeItem } from '@/components/TreeItem'
-import { Content } from '@/components/Content';
-import { Node } from '@/types/index'
-import { useStore } from '@/states/state';
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useState } from "react";
+import { TreeItem } from "@/components/TreeItem";
+import { Content } from "@/components/Content";
+import { Node } from "@/types/index";
+import { useStore } from "@/states/state";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const Memo = () => {
-  const selected = useStore((state) => state.selected)
+  const selected = useStore((state) => state.selected);
   const [items, setItems] = useState<Node[]>([
     {
       id: "1",
@@ -59,7 +59,6 @@ export const Memo = () => {
     },
   ]);
 
-
   const mapping = (item: Node, targetId: string): Node => {
     if (item.id === targetId) {
       return {
@@ -67,40 +66,42 @@ export const Memo = () => {
         isOpen: true,
       };
     } else if (item.children) {
-      const newChildren = item.children.map((child) => mapping(child, targetId));
-        return {
+      const newChildren = item.children.map((child) =>
+        mapping(child, targetId)
+      );
+      return {
         ...item,
         children: newChildren,
       };
     }
-      return item;
-  }
+    return item;
+  };
 
   const changeToOpen = (id: string) => {
-    setItems( items => {
+    setItems((items) => {
       return items.map((item) => {
         return mapping(item, id);
-      })
-    } 
-    );
-  }
-
+      });
+    });
+  };
 
   const changeToAdding = (id: string) => {
-    setItems(items => items.map(item => mappingForAdding(item, id)));
+    setItems((items) => items.map((item) => mappingForAdding(item, id)));
   };
-  
+
   const mappingForAdding = (item: Node, targetId: string): Node => {
     if (item.id === targetId) {
       return {
         ...item,
-        isAdding: !item.isAdding
+        isAdding: !item.isAdding,
       };
     } else if (item.children) {
-      const newChildren = item.children.map(child => mappingForAdding(child, targetId));
+      const newChildren = item.children.map((child) =>
+        mappingForAdding(child, targetId)
+      );
       return {
         ...item,
-        children: newChildren
+        children: newChildren,
       };
     }
     return item;
@@ -161,7 +162,7 @@ export const Memo = () => {
       parentId: parentId,
       label: fileName,
       isFolder: false,
-      isSecret: false,
+      isSecret: selected,
       children: [],
       level: newLevel,
       isOpen: false,
@@ -173,25 +174,25 @@ export const Memo = () => {
   };
 
   return (
-    <div className={`flex ${selected ? 'bg-black' : ''}`}>
-        <ScrollArea className="w-64 whitespace-nowrap border">
-          <div className={`flex-1 ml-4 mt-4  ${selected ? 'text-white' : ''}`}>
-            {items.map((item) => (
-              <TreeItem
-                key={item.id}
-                {...item}
-                level={0}
-                addNewFolder={addNewFolder}
-                addNewFile={addNewFile}
-                changeToAdding={changeToAdding}
-                changeToOpen={changeToOpen}
-              />
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      <div className='mr-4 w-[80%]'>
-          <Content />
+    <div className={`flex ${selected ? "bg-black" : ""}`}>
+      <ScrollArea className="w-64 whitespace-nowrap border">
+        <div className={`flex-1 ml-4 mt-4  ${selected ? "text-white" : ""}`}>
+          {items.map((item) => (
+            <TreeItem
+              key={item.id}
+              {...item}
+              level={0}
+              addNewFolder={addNewFolder}
+              addNewFile={addNewFile}
+              changeToAdding={changeToAdding}
+              changeToOpen={changeToOpen}
+            />
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="mr-4 w-[80%]">
+        <Content />
       </div>
     </div>
   );
