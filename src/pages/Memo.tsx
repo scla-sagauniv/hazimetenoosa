@@ -1,109 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TreeItem } from "@/components/TreeItem";
 import { Content } from "@/components/Content";
-import { Node, NodeComponent, TreeItemData } from "@/types/index";
+import { NodeData, TreeItemData } from "@/models/index";
 import { useStore } from "@/states/state";
+
+import { nodeDatas } from "@/constants/demodata";
 
 export const Memo = () => {
   const selected = useStore((state) => state.selected);
   const [items, setItems] = useState<TreeItemData[]>([]);
-  // {
-  //   node: {
-  //     id: 1,
-  //     parentId: null,
-  //     isFolder: false,
-  //     isSecret: false,
-  //     content: [
-  //       { id: 1, name: "test1", body: "", createdAt: new Date(), updatedAt: new Date(), deletedAt: null }
-  //     ]
-  //   },
-  //   isAdding: false,
-  //   isOpen: false
-  // },
-  // {
-  //   node: {
-  //     id: 2,
-  //     parentId: null,
-  //     isSecret: false,
-  //     isFolder: true,
-  //     children: [
-  //        {
-  //           id: 2.1,
-  //           parentId: 2,
-  //           isSecret: false,
-  //           isFolder: false,
-  //           content: [
-  //             { id: 2.1, name: "test2.1", body: "", createdAt: new Date(), updatedAt: new Date(), deletedAt: null }
-  //           ]
-  //         }
-  //     ],
-  //     content: [{id: 2, name: "test2", createdAt: new Date(), updatedAt: new Date(), deletedAt: null}]
-  //   },
-  //   isAdding: false,
-  //   isOpen: false
-  // }
-  const datas: Node[] = [
-    {
-      id: 1,
-      parentId: null,
-      isFolder: false,
-      isSecret: false,
-      content: {
-        id: 1,
-        name: "test1",
-        body: "",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      },
-    },
-    {
-      id: 2,
-      parentId: null,
-      isSecret: false,
-      isFolder: true,
-      children: [
-        {
-          id: 2.1,
-          parentId: 2,
-          isSecret: false,
-          isFolder: false,
-          content: {
-            id: 2.1,
-            name: "test2.1",
-            body: "",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-      ],
-      content: {
-        id: 2,
-        name: "test2",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      },
-    },
-  ];
+  let nodeCount = 0;
 
-  // transform Node[] to TreeItemData[]
-  setItems(
-    datas.map((data) => {
-      return {
-        id: data.id,
-        parentId: data.parentId,
-        isSecret: data.isSecret,
-        isFolder: data.isFolder,
-        children: data.children,
-        content: data.content,
-        isAdding: false,
-        isOpen: false,
-        level: 0,
-      };
-    })
-  );
+  useEffect(() => {
+    function deepConverter(nodeDatas: NodeData[]): TreeItemData[] {
+      return nodeDatas.map((nodeData) => {
+        nodeCount++;
+        if (nodeData.children.length === 0) {
+          return {
+            ...nodeData,
+            children: [],
+            isAdding: false,
+            isOpen: false,
+            level: 0,
+          };
+        } else {
+          return {
+            ...nodeData,
+            children: deepConverter(nodeData.children),
+            isAdding: false,
+            isOpen: false,
+            level: 0,
+          };
+        }
+      });
+    }
+
+    const treeItemDatas: TreeItemData[] = deepConverter(nodeDatas);
+    setItems(treeItemDatas);
+    console.log(treeItemDatas, nodeCount);
+  }, []);
 
   const mapping = (item: TreeItemData, targetId: number): TreeItemData => {
     if (item.id === targetId) {
@@ -113,13 +48,11 @@ export const Memo = () => {
       };
     } else if (item.children) {
       const newChildren = item.children.map((child) =>
-        mapping(, targetId)
+        mapping(child, targetId)
       );
       return {
         ...item,
-        children: {
-          children: newChildren,
-        },
+        children: newChildren,
       };
     }
     return item;
@@ -138,24 +71,21 @@ export const Memo = () => {
   };
 
   const mappingForAdding = (
-    item: NodeComponent,
+    item: TreeItemData,
     targetId: number
-  ): NodeComponent => {
-    if (item.node.id === targetId) {
+  ): TreeItemData => {
+    if (item.id === targetId) {
       return {
         ...item,
         isAdding: !item.isAdding,
       };
-    } else if (item.node.children) {
-      const newChildren = item.node.children.map((child) =>
+    } else if (item.children) {
+      const newChildren = item.children.map((child) =>
         mappingForAdding(child, targetId)
       );
       return {
         ...item,
-        node: {
-          ...item.node,
-          children: newChildren,
-        },
+        children: newChildren,
       };
     }
     return item;
@@ -163,14 +93,14 @@ export const Memo = () => {
 
   const findParentNode = (
     parentId: number,
-    nodes: NodeComponent[]
-  ): NodeComponent | null => {
+    nodes: TreeItemData[]
+  ): TreeItemData | null => {
     for (const node of nodes) {
-      if (node.node.id === parentId) {
+      if (node.id === parentId) {
         return node;
       }
-      if (node.node.children) {
-        const found = findParentNode(parentId, node.node.children);
+      if (node.children) {
+        const found = findParentNode(parentId, node.children);
         if (found) return found;
       }
     }
@@ -178,21 +108,19 @@ export const Memo = () => {
   };
 
   const addNodeToTree = (
-    newNode: NodeComponent,
-    nodes: NodeComponent[]
-  ): NodeComponent[] => {
+    newNode: TreeItemData,
+    nodes: TreeItemData[]
+  ): TreeItemData[] => {
     return nodes.map((node) => {
-      if (node.node.id === newNode.node.parentId) {
+      if (node.id === newNode.parentId) {
         return {
           ...node,
-          children: node.node.children
-            ? [...node.node.children, newNode]
-            : [newNode],
+          children: node.children ? [...node.children, newNode] : [newNode],
         };
-      } else if (node.node.children) {
+      } else if (node.children) {
         return {
           ...node,
-          children: addNodeToTree(newNode, node.node.children),
+          children: addNodeToTree(newNode, node.children),
         };
       } else {
         return node;
@@ -200,19 +128,29 @@ export const Memo = () => {
     });
   };
 
-  const addNewFolder = (parentId: number, folderName: number) => {
+  const addNewFolder = (parentId: number, folderName: string) => {
     const parentNode = findParentNode(parentId, items);
     const newLevel = parentNode?.level != null ? parentNode.level + 1 : 0;
-    const newFolder: NodeComponent = {
-      node: Date.now(),
+    const newFolder: TreeItemData = {
+      id: items.length,
       parentId: parentId,
-      label: folderName,
       isFolder: true,
       isSecret: false,
       children: [],
       level: newLevel,
+      content: {
+        id: items.length,
+        name: folderName,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      },
       isOpen: false,
       isAdding: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      authorId: 0,
     };
 
     const updatedItems = addNodeToTree(newFolder, items);
@@ -222,16 +160,27 @@ export const Memo = () => {
   const addNewFile = (parentId: number, fileName: string) => {
     const parentNode = findParentNode(parentId, items);
     const newLevel = parentNode?.level != null ? parentNode.level + 1 : 0;
-    const newFile: Node = {
-      id: Date.now().toString(),
+    const newFile: TreeItemData = {
+      id: items.length,
       parentId: parentId,
-      label: fileName,
       isFolder: false,
       isSecret: false,
       children: [],
+      content: {
+        id: items.length,
+        name: fileName,
+        body: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      },
       level: newLevel,
       isOpen: false,
       isAdding: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      authorId: 0,
     };
 
     const updatedItems = addNodeToTree(newFile, items);
@@ -248,7 +197,7 @@ export const Memo = () => {
         {items.map((item) => (
           <TreeItem
             key={item.id}
-            {...item}
+            item={item}
             level={0}
             addNewFolder={addNewFolder}
             addNewFile={addNewFile}

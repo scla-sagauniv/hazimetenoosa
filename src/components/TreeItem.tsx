@@ -1,133 +1,151 @@
-import { useState } from 'react';
-import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
-import FolderIcon from '@heroicons/react/24/outline/FolderIcon';
-import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Node } from '@/types/index';
-import { FaFolderPlus } from 'react-icons/fa';
+import { useState } from "react";
+import ChevronDownIcon from "@heroicons/react/24/outline/ChevronDownIcon";
+import FolderIcon from "@heroicons/react/24/outline/FolderIcon";
+import DocumentIcon from "@heroicons/react/24/outline/DocumentIcon";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FaFolderPlus } from "react-icons/fa";
 import { FaFileMedical } from "react-icons/fa";
-import { useStore } from '@/states/state';
+import { useStore } from "@/states/state";
+import { TreeItemData } from "@/models/index";
 
 export const TreeItem = ({
-  id,
-  label,
-  isAdding,
-  isOpen,
-  isSecret,
-  isFolder,
-  children,
-  level = 0,
+  item,
+  level,
   addNewFolder,
   addNewFile,
   changeToAdding,
-  changeToOpen
-}: Node & { addNewFolder?: 
-  (parentId: string, folderName: string) => void} & 
-  {changeToAdding?: (id: string) => void} & 
-  {changeToOpen?: (id: string) => void} & 
-  {addNewFile?: (parentId: string, fileName: string) => void}
-  ) => {
-
-  const [newFolderName, setNewFolderName] = useState<string>("")
-  const [newFileName, setNewFileName] = useState<string>("")
-  const [showFileInput, setShowFileInput] = useState<boolean>(false)
+  changeToOpen,
+}: { item: TreeItemData } & { level: number } & {
+  addNewFolder?: (parentId: number, folderName: string) => void;
+} & {
+  changeToAdding?: (id: number) => void;
+} & { changeToOpen?: (id: number) => void } & {
+  addNewFile?: (parentId: number, fileName: string) => void;
+}) => {
+  const [newFolderName, setNewFolderName] = useState<string>("");
+  const [newFileName, setNewFileName] = useState<string>("");
+  const [showFileInput, setShowFileInput] = useState<boolean>(false);
 
   const handleAddFolder = () => {
-    if(changeToAdding){
-      changeToAdding(id);
+    if (changeToAdding) {
+      changeToAdding(item.id);
     }
-    if(changeToOpen){
-      changeToOpen(id);
+    if (changeToOpen) {
+      changeToOpen(item.id);
     }
   };
 
   const handleAddFile = () => {
     setShowFileInput(true);
-    if(changeToOpen){
-      changeToOpen(id);
+    if (changeToOpen) {
+      changeToOpen(item.id);
     }
-  }
+  };
 
-  const selected = useStore((state) => state.selected)
-  const indent = level * 20;
-  const Icon = isFolder ? FolderIcon : DocumentIcon;
+  const selected = useStore((state) => state.selected);
+  const indent = item.level * 20;
+  const Icon = item.isFolder ? FolderIcon : DocumentIcon;
 
-  if (isSecret) {
+  if (item.isSecret) {
     return null;
   }
 
   const handleOpen = () => {
-    if(changeToOpen){
-      changeToOpen(id);
+    if (changeToOpen) {
+      changeToOpen(item.id);
     }
-  }
+  };
 
   return (
     <div style={{ paddingLeft: `${indent}px` }}>
       <div className="flex items-center">
-        <Checkbox className={`mr-2 ${selected ? 'bg-white' : ''}`} />
-        {isFolder && (
-          <ChevronDownIcon className={`w-5 h-5 mr-2 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}  onClick={handleOpen}/>
+        <Checkbox className={`mr-2 ${selected ? "bg-white" : ""}`} />
+        {item.isFolder && (
+          <ChevronDownIcon
+            className={`w-5 h-5 mr-2 transition-transform ${
+              item.isOpen ? "rotate-0" : "-rotate-90"
+            }`}
+            onClick={handleOpen}
+          />
         )}
-        {!isFolder && <Icon className="w-5 h-5 mr-2" />}
-        <span className="ml-1">{label}</span>
+        {!item.isFolder && <Icon className="w-5 h-5 mr-2" />}
+        <span className="ml-1">{item.content.name}</span>
 
-        {isFolder && <FaFolderPlus className='w-[26px] h-4 ml-2 cursor-pointer' onClick={handleAddFolder}/>}
-        {isFolder && <FaFileMedical className='w-4 h-4 ml-2 cursor-pointer' onClick={handleAddFile}/>}
-
-        
+        {item.isFolder && (
+          <FaFolderPlus
+            className="w-[26px] h-4 ml-2 cursor-pointer"
+            onClick={handleAddFolder}
+          />
+        )}
+        {item.isFolder && (
+          <FaFileMedical
+            className="w-4 h-4 ml-2 cursor-pointer"
+            onClick={handleAddFile}
+          />
+        )}
       </div>
-      {isOpen && isAdding && isFolder && (
-        <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
-          <input 
-            type='text' 
-            className={`w-20 border border-black ${selected ? 'text-black' : ''}`}
+      {item.isOpen && item.isAdding && item.isFolder && (
+        <div style={{ marginLeft: "20px", paddingLeft: `${indent + 20}px` }}>
+          <input
+            type="text"
+            className={`w-20 border border-black ${
+              selected ? "text-black" : ""
+            }`}
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => {
-            if(e.key === 'Enter' && newFolderName){
-              if(addNewFolder){
-                addNewFolder(id, newFolderName);
+              if (e.key === "Enter" && newFolderName) {
+                if (addNewFolder) {
+                  addNewFolder(item.id, newFolderName);
+                }
+                if (changeToAdding) {
+                  changeToAdding(item.id);
+                }
+                setNewFolderName("");
               }
-              if(changeToAdding){
-                changeToAdding(id);
-              }
-              setNewFolderName("");
-            }
-          }}/>
+            }}
+          />
         </div>
-      )
-      }
+      )}
       {showFileInput && (
-        <div style={{ marginLeft: '20px', paddingLeft: `${indent + 20}px` }}>
-          <input 
-            type='text' 
-            className={`w-20 border border-black ${selected ? 'text-black' : ''}`}
+        <div style={{ marginLeft: "20px", paddingLeft: `${indent + 20}px` }}>
+          <input
+            type="text"
+            className={`w-20 border border-black ${
+              selected ? "text-black" : ""
+            }`}
             value={newFileName}
             onChange={(e) => setNewFileName(e.target.value)}
             onKeyDown={(e) => {
-            if(e.key === 'Enter' && newFileName){
-              if(addNewFile){
-                addNewFile(id, newFileName);
+              if (e.key === "Enter" && newFileName) {
+                if (addNewFile) {
+                  addNewFile(item.id, newFileName);
+                }
+                if (changeToAdding) {
+                  changeToAdding(item.id);
+                }
+                setNewFileName("");
+                setShowFileInput(false);
               }
-              if(changeToAdding){
-                changeToAdding(id);
-              }
-              setNewFileName("");
-              setShowFileInput(false);
-            }
-          }}/>
+            }}
+          />
         </div>
-      )
-      }
-      {isOpen && children && (
-        <div style={{ marginLeft: '20px' }}>
-          {children.map((child) => (
-            <TreeItem key={child.id} {...child} level={level + 1} addNewFolder={addNewFolder} addNewFile={addNewFile} changeToAdding={changeToAdding} changeToOpen={changeToOpen}/> // 子コンポーネントにも引き継ぐ
+      )}
+      {item.isOpen && item.children && (
+        <div style={{ marginLeft: "20px" }}>
+          {item.children.map((child) => (
+            <TreeItem
+              key={child.id}
+              item={child}
+              level={level + 1}
+              addNewFolder={addNewFolder}
+              addNewFile={addNewFile}
+              changeToAdding={changeToAdding}
+              changeToOpen={changeToOpen}
+            /> // 子コンポーネントにも引き継ぐ
           ))}
         </div>
       )}
     </div>
   );
 };
-

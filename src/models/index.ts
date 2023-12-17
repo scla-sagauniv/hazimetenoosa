@@ -1,30 +1,31 @@
-export type NodeComponent = {
-  node: Node;
-  isAdding: boolean;
-  isOpen: boolean;
-  level: number;
+export type NodeData = {
+  id: number;
+  isSecret: boolean;
+  isFolder: boolean;
+  parentId: number | null;
+  children: NodeData[];
+  content: Memo | Folder;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+  authorId: number;
 };
 
 export type TreeItemData = {
   id: number;
-  parentId: number | null;
   isSecret: boolean;
   isFolder: boolean;
-  children?: Node[];
+  parentId: number | null;
+  children: TreeItemData[];
   content: Memo | Folder;
-  isAdding: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+  authorId: number;
   isOpen: boolean;
+  isAdding: boolean;
   level: number;
 };
-
-export interface Node {
-  id: number;
-  parentId: number | null;
-  isSecret: boolean;
-  isFolder: boolean;
-  children?: Node[];
-  content: Memo | Folder;
-}
 
 export type Memo = {
   id: number;
